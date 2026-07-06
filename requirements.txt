@@ -5,3 +5,4 @@ pandas
 numpy
 langdetect
 joblib
+huggingface_hub
