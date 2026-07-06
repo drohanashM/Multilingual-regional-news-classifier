@@ -5,6 +5,7 @@ import joblib
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 from langdetect import detect, DetectorFactory
+from huggingface_hub import hf_hub_download
 
 DetectorFactory.seed = 42  # deterministic langdetect results
 
@@ -36,11 +37,22 @@ def load_classifiers():
     zeroshot_clf = joblib.load("zeroshot_clf.joblib")
     return multilingual_clf, zeroshot_clf
 
+HF_DATASET_REPO = "drohanashM/multilingual-news-classifier-data"
 
-@st.cache_data(show_spinner="Loading reference headlines...")
+@st.cache_data(show_spinner="Loading full reference dataset (first run only)...")
 def load_reference_data():
-    ref_df = pd.read_csv("reference_data.csv")
-    ref_embeddings = np.load("reference_embeddings.npy")
+    data_path = hf_hub_download(
+        repo_id=HF_DATASET_REPO,
+        filename="full_reference_data.parquet",
+        repo_type="dataset",
+    )
+    embeddings_path = hf_hub_download(
+        repo_id=HF_DATASET_REPO,
+        filename="full_reference_embeddings.npy",
+        repo_type="dataset",
+    )
+    ref_df = pd.read_parquet(data_path)
+    ref_embeddings = np.load(embeddings_path)
     return ref_df, ref_embeddings
 
 
