@@ -58,7 +58,7 @@ Full analysis, including the embedding-space sanity checks and per-language conf
 ## Running locally
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/multilingual-regional-news-classifier.git
+git clone [https://github.com/drohanashM/Multilingual-regional-news-classifier.git](https://github.com/drohanashM/Multilingual-regional-news-classifier)
 cd multilingual-regional-news-classifier
 pip install -r requirements.txt
 streamlit run app.py
