@@ -50,15 +50,15 @@ Full analysis, including the embedding-space sanity checks and per-language conf
 ├── requirements.txt
 ├── multilingual_clf.joblib         # trained on English + Hindi + Bengali
 ├── zeroshot_clf.joblib             # trained on English + Hindi only
-├── reference_data.csv              # sampled headlines for nearest-neighbor lookup
-├── reference_embeddings.npy        # matching LaBSE embeddings for reference_data.csv
 └── multilingual_regional_news_classifier.ipynb   # full pipeline: data → preprocessing → embeddings → evaluation
 ```
+
+The nearest-neighbor reference set (~56,700 deduplicated headlines and their LaBSE embeddings) is hosted separately on [Hugging Face Hub](https://huggingface.co/datasets) as `full_reference_data.parquet` and `full_reference_embeddings.npy`, and downloaded on demand by `app.py` via `huggingface_hub.hf_hub_download`, with local caching so it's only fetched once per deployment.
 
 ## Running locally
 
 ```bash
-git clone https://github.com/drohanashM/Multilingual-regional-news-classifier.git
+git clone https://github.com/drohanashM/multilingual-regional-news-classifier.git
 cd multilingual-regional-news-classifier
 pip install -r requirements.txt
 streamlit run app.py
@@ -74,5 +74,5 @@ Python · sentence-transformers (LaBSE) · scikit-learn · pandas · Streamlit �
 
 - No agriculture category in the source dataset — would need separate data collection.
 - Cross-lingual `sports` recall is weaker than in-language (see notebook Section 8) — headlines with regional context (e.g. local league names) transfer less cleanly than universal-topic categories like technology.
-- Currently deployed with a sampled reference set for the nearest-neighbor feature; a full-dataset version with embeddings hosted on Hugging Face Hub would give richer neighbor results.
 - Classifier is a simple LogisticRegression on frozen embeddings — a small MLP or fine-tuning LaBSE itself could likely close some of the remaining monolingual/multilingual gap.
+- The nearest-neighbor feature draws from the full dataset now, but a handful of source-data labeling errors (noted above) still occasionally surface as an odd category tag on an otherwise topically-correct neighbor — a known, documented artifact rather than a pipeline bug.
